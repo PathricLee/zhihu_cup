@@ -15,7 +15,10 @@ def eval(predict, la):
 
         acc = sum(weight * pred)
         rel = sum(pred) / len(la)
-        f = acc * rel / (acc + rel)
+        if acc == 0 or rel == 0:
+            f = 0
+        else:
+            f = acc * rel / (acc + rel)
         f_lst.append(f)
     return sum(f_lst)/len(f_lst)
 
