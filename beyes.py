@@ -3,7 +3,6 @@
 
 
 import numpy as np
-import time
 
 
 def read_question_topic_table(file_qt):
@@ -59,12 +58,14 @@ def question_info(file_question):
     
 
 def main():
-    label_question, label_pro = read_question_topic_table("../ieee_zhihu_cup/question_topic_train_set.txt")
-    #question_words = question_info("../ieee_zhihu_cup/question_train_set.txt") 
-    question_words = question_info("../cnn-text-classification-tf/question_train_set.txt.10w") 
+    label_question, label_pro = read_question_topic_table("question_topic_train_set.txt.50w")
+    label_question_eval, label_pro_eval = read_question_topic_table("question_topic_train_set.txt.5w")
+
+    question_words = question_info("question_train_set.txt.50w") 
+    question_words_eval = question_info("question_train_set.txt.5w") 
+
     label_word_times = dict()
     word_set = set()
-    start = time.clock()
     try:
         for label, question_lst in label_question.items():
             for question in question_lst:
@@ -76,14 +77,12 @@ def main():
                     word_set.add(word)
     except Exception as e:
         print(e)
-    print(len(word_set))
-    return
     # 测试
-    for i, (qid, words) in enumerate(question_words.items()):
+    for i, (qid, words) in enumerate(question_words_eval.items()):
         res = []
         for label in label_question:
             log_evl = np.log(label_pro[label][0])
-            for word in word_set:
+            for word in words:
                 key = "%s\t%s" % (label, word)
                 num = label_word_times.get(key, 1)
                 prob = float(num) / label_pro[label][1]
@@ -94,9 +93,7 @@ def main():
         # sort
         res_sort = sorted(res, key = lambda x:x[1])
         x = [label for label, cost in res_sort[:5]]
-        if i == 1000:
-            break
-    return res_sort, 
+        print("%s\t%s" % (qid, ','.join(x)))
 
 
 def test():
