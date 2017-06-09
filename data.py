@@ -32,11 +32,14 @@ def read_question_topic_table(file_qt):
 if __name__ == "__main__":
     # 必须保证顺序是对应的
     real = read_question_topic_table("question_topic_train_set.txt.5w")
-    predict = read_question_topic_table("nohup.out")
+    #predict = read_question_topic_table("question_topic_train_set.txt.5w")
+    predict = read_question_topic_table("predict.txt")
     res = []
-    for i in range(3500):
+    for i in range(50000):
         i = i + 1
-        res.append(eval(np.array(predict[:i]), np.array(real[:i])))
+        if i % 1000 == 0:
+            res.append(eval(np.array(predict[:i]), np.array(real[:i])))
     x = np.array(res)
     plt.plot(x)
     plt.show()
+    #print(eval(np.array(predict), np.array(real)))
