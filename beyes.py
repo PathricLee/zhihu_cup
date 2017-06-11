@@ -58,14 +58,14 @@ def question_info(file_question):
     
 
 def main():
-    label_question, label_pro = read_question_topic_table("question_topic_train_set.txt.50w")
-    label_question_eval, label_pro_eval = read_question_topic_table("question_topic_train_set.txt.5w")
+    label_question, label_pro = read_question_topic_table("question_topic_train_set.txt.150w")
+    #label_question_eval, label_pro_eval = read_question_topic_table("question_topic_train_set.txt.5w")
 
-    question_words = question_info("question_train_set.txt.50w") 
+    question_words = question_info("question_train_set.txt.150w") 
     question_words_eval = question_info("question_train_set.txt.5w") 
 
     label_word_times = dict()
-    word_set = set()
+    #word_set = set()
     try:
         for label, question_lst in label_question.items():
             for question in question_lst:
@@ -74,7 +74,7 @@ def main():
                 for word in question_words[question]:
                     key = "%s\t%s" % (label, word)
                     label_word_times[key] = label_word_times.get(key, 1) + 1
-                    word_set.add(word)
+                    #word_set.add(word)
     except Exception as e:
         print(e)
     # 测试
