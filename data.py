@@ -31,7 +31,7 @@ def read_question_topic_table(file_qt):
 
 if __name__ == "__main__":
     # 必须保证顺序是对应的
-    real = read_question_topic_table("question_topic_train_set.txt.5w")
+    real = read_question_topic_table("question_topic_train_set.txt.30w.eval")
     """
     predict = read_question_topic_table("question_topic_train_set.txt.5w")
     for lst in predict:
@@ -39,12 +39,14 @@ if __name__ == "__main__":
             lst.append('000000')
     print(eval(np.array(predict), np.array(real)))
     """
-    predict = read_question_topic_table("predict.txt1")
+    predict = read_question_topic_table("tmp")
+    tmp_test = np.array(predict)[:,0:5]
     res = []
-    for i in range(50000):
+    for i in range(36000):
         i = i + 1
         if i % 1000 == 0:
-            res.append(eval(np.array(predict[:i]), np.array(real[:i])))
+            print(i)
+            res.append(eval(tmp_test[0:i,:], np.array(real[:i])))
     x = np.array(res)
     plt.plot(x)
     plt.show()

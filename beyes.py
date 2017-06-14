@@ -54,15 +54,14 @@ def question_info(file_question):
         all_words_str = "%s,%s" % (wtitles, wdes)
         words_all = all_words_str.split(',')
         question_words[qid] = words_all
-    return question_words
-    
+    return question_words 
 
 def main():
-    label_question, label_pro = read_question_topic_table("question_topic_train_set.txt.150w")
+    label_question, label_pro = read_question_topic_table("question_topic_train_set.txt.270w")
     #label_question_eval, label_pro_eval = read_question_topic_table("question_topic_train_set.txt.5w")
 
-    question_words = question_info("question_train_set.txt.150w") 
-    question_words_eval = question_info("question_train_set.txt.5w") 
+    question_words = question_info("question_train_set.txt.270w") 
+    question_words_eval = question_info("question_train_set.txt.30w.eval") 
 
     label_word_times = dict()
     #word_set = set()
@@ -77,6 +76,7 @@ def main():
                     #word_set.add(word)
     except Exception as e:
         print(e)
+    question_words.clear()
     # 测试
     for i, (qid, words) in enumerate(question_words_eval.items()):
         res = []
@@ -92,7 +92,8 @@ def main():
 
         # sort
         res_sort = sorted(res, key = lambda x:x[1])
-        x = [label for label, cost in res_sort[:5]]
+        #x = [label for label, cost in res_sort[:5]]
+        x = [label for label, cost in res_sort]
         print("%s\t%s" % (qid, ','.join(x)))
 
 
