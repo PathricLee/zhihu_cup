@@ -2,6 +2,7 @@ import numpy as np
 import re
 import itertools
 from collections import Counter
+from tensorflow.contrib import learn
 
 
 def clean_str(string):
@@ -45,6 +46,59 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     return [x_text, y]
 
 
+def zhihu_load_data_and_labels(question_train_set, question_topic_train_set, topic_info):
+    """
+    目的：加载数据
+    question_train_set： 得到一个问题对应的字序列
+    question_topic_train_set： 得到一个问题的labels
+    topic_info: 话题描述信息
+    """
+    # topic list
+    topic = [line.strip().split('\t')[0] for line in list(open(topic_info, 'r').readlines())]
+
+    # 得到每一个训练实例的标记。对应label置1
+    y_labels = []
+    for line in open(question_topic_train_set):
+        line = line.strip()
+        label_str = line.split('\t')[1]
+        labels = label_str.split(',')
+        index = [0] * 2000
+        for label in labels:
+            i = topic.index(label)
+            index[i] = 1
+        y_labels.append(index)
+            
+    # 得到每一个问题的字符序列。
+    x_text = []
+    for line in open(question_train_set):
+        words = line.split('\t')
+        qid, ctitles, wtitles, cdes, wdes = words
+        # 字符序列 空格为分割符号
+        c_str = ' '.join((','.join((ctitles, cdes))).split(','))
+        x_text.append(c_str)
+
+    return [x_text, np.array(y_labels)]
+            
+
+def vocab_index(question_train_set, char_embedding, vocab_processor):
+    # 得到每一个问题的字符序列。
+    """
+    max_sen = set()
+    for line in open(question_train_set):
+        words = line.split('\t')
+        qid, ctitles, wtitles, cdes, wdes = words
+        # 字符序列 空格为分割符号
+        for word in (','.join((ctitles, cdes))).split(',')
+            if word not in max_sen:
+                max_sen.add(word)
+    print(len(max_sen))
+    max_sen_str = ' '.join(list(max_sen))
+    alist = vocab_processor.transform([max_sen_str])
+    """
+    pass
+
+    
+
 def batch_iter(data, batch_size, num_epochs, shuffle=True):
     """
     Generates a batch iterator for a dataset.
@@ -63,3 +117,8 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
             start_index = batch_num * batch_size
             end_index = min((batch_num + 1) * batch_size, data_size)
             yield shuffled_data[start_index:end_index]
+
+
+if __name__ == '__main__':
+    zhihu_load_data_and_labels('question_train_set.txt.5w', 'question_topic_train_set.txt.5w',
+            'topic_info.txt')
